@@ -1,6 +1,7 @@
 from pydub import AudioSegment
 import glob
-files = glob.glob("/Users/alexa/OneDrive/Documents/GitHub/Audio-Segmentation/ops/*.wav*")
+import os
+files = glob.glob("./*.wav*")
 for file in files:
     newAudio = AudioSegment.from_wav(file)[0:10000]  # milliseconds
     # exports to a .wav file to a different path
