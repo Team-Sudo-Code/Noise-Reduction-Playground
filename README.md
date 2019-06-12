@@ -1,5 +1,5 @@
-# Audio-Segmentation
-A tool to separate audio into distinct sources.
+# Noise Reduction Playground
+A playground for noise reduction using machine learning.
 
 ## About
 This project was created by Kento Nishi, Thomas Li, Alexander Zhang, and Rahul Kaura.
