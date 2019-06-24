@@ -1,10 +1,11 @@
 from pydub import AudioSegment
 import glob
-files = glob.glob('')
+import os
+files = glob.glob("./*.wav*")
 for file in files:
-    newAudio = AudioSegment.from_wav(file)[0:10000] # milliseconds
-    newAudio.export('./new/'+file.getName(), format="wav") # Exports to a wav file to a different path
-#Code for the project for trim.py which is trimming the wav files that Kento will upload
-#Need to run the code that Alex has created
-#I have the progessional version
-#This code taes the file and trims it into ten second cut outs
+    newAudio = AudioSegment.from_wav(file)[0:10000]  # milliseconds
+    # exports to a .wav file to a different path
+newAudio.export(file.rsplit('\\', 1)[0]+"/new/"+file.rsplit('\\', 1)[1], format="wav")
+
+
+
