@@ -6,3 +6,5 @@ for file in files:
     newAudio.export('./new/'+file.getName(), format="wav") # Exports to a wav file to a different path
 #Code for the project for trim.py which is trimming the wav files that Kento will upload
 #Need to run the code that Alex has created
+#I have the progessional version
+#This code taes the file and trims it into ten second cut outs
