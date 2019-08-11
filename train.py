@@ -4,9 +4,10 @@ from keras import models, layers
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Conv1D, LSTM
 from keras.optimizers import Adam
+from scipy.io.wavfile import read
 import soundops
 def preprocessing():
-    data=soundops.process_all("Megalovania.wav")
+    data=read("Megalovania.wav")
     return data
 def build_model():
     ###Placeholder model
