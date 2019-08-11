@@ -10,12 +10,14 @@ def frequency_extraction(audio, samplingrate):
     freqs = np.fft.fftfreq(len(amplitudes))
     freqs=freqs*samplingrate
     return (freqs, amplitudes)
-def trim_frequencies(frequencies, amplitudes, num_frequencies):
-    ##returns num_frequencies amount of frequencies w/ corresponding amplitudes
-    largestfreqs=[]
-    for i in range(num_frequencies):
-        largest_index=np.argmax(amplitudes)
-        largestfreqs.
+#def trim_frequencies(frequencies, amplitudes, num_frequencies):
+#    ##returns num_frequencies amount of frequencies w/ corresponding amplitudes
+#    # find the lowest high frequency cap
+#    largestfreq
+#    for i in range(num_frequencies):
+#        largest_idx=np.argmax(amplitudes)
+#        largestfreqs.append(frequencies[largest_idx])
+#        
 def data_to_chunks(audiodata, samplingrate):
     newsamplerate=20*(samplingrate/1000) #20ms per sample
     newarray=np.split(audiodata, newsamplerate)
