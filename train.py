@@ -23,11 +23,13 @@ def preprocessing():
 def build_model():
     ###Placeholder model
     model=Sequential()
-    model.add(LSTM(512,activation='relu', input_dim=2))
+    model.add(LSTM(512,activation='relu', input_shape=(2,)))
     
-    model.add(Dense(1,activation='sigmoid'))
+    model.add(Dense(2,activation='sigmoid'))
     model.compile(loss='categorical_crossentropy', optimizer=Adam(0.001), metrics=['categorical_accuracy'])
     return model
 audiodata=preprocessing()
 model=build_model()
-model.fit(soundops.create_noise(audiodata),audiodata, epochs=1) 
+noised=soundops.create_noise(audiodata)
+noised=noised.reshape((1,len(noised), 2))
+model.fit(noised,audiodata, epochs=1) 
