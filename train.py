@@ -39,10 +39,10 @@ audiodata=np.asarray(audiodata)
 
 
 model = Sequential()
-model.add(Embedding(len(audiodata)),output_dim=64)
+model.add(Embedding(len(audiodata),64))
 model.add(LSTM(32, return_sequences=False))
 model.add(Dense(1))
-model.compile(loss='categorical_crossentropy', optimizer=Adam(0.001), metrics=['categorical_accuracy'])
+model.compile(loss='sparse_categorical_crossentropy', optimizer=Adam(0.001), metrics=['categorical_accuracy'])
 noised = soundops.create_noise(audiodata)
 #noised = noised.reshape((1, len(noised), 1))
 #audiodata=audiodata.reshape(1,len(audiodata),1)
