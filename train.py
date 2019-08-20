@@ -18,12 +18,12 @@ import soundops
 #    return np.asarray(finalarray)
 
 
-def betternormalization(data):
-    minhigh = None
-    maxlow = 0
-    for i in data:
-        minhigh = min(minhigh, i)
-        maxlow = max(maxlow, i)
+#def betternormalization(data):
+#    minhigh = None
+#    maxlow = 0
+#    for i in data:
+#        minhigh = min(minhigh, i)
+#        maxlow = max(maxlow, i)
 
 
 def preprocessing():
@@ -38,9 +38,14 @@ audiodata = [x[0] for x in audiodata] #take L channel of audio
 audiodata=np.asarray(audiodata,dtype='float32') #float32 for fast GPU
 noised = soundops.create_noise(audiodata)
 noised=soundops.data_to_chunks(noised) #200 timesteps per thingamabob
-
 noised=np.stack(noised) #concatenate stuffs
 noised=noised.astype("float32")
+
+audiodata=soundops.data_to_chunks(audiodata)
+audiodata=np.asarray(audiodata,dtype='float32') #float32 for fast GPU
+
+
+
 
 def create_model():
     model = Sequential()
