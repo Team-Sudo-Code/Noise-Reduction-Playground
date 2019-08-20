@@ -8,14 +8,14 @@ from scipy.io.wavfile import read
 import soundops
 
 
-def normalization(data):
-    maxval = np.argmax(data)
-    minval = np.argmin(data)
-    diff = maxval - minval
-    finalarray = []
-    for val in data:
-        finalarray.append((val - minval) / diff)
-    return np.asarray(finalarray)
+#def normalization(data):
+#    maxval = np.argmax(data)
+#    minval = np.argmin(data)
+#    diff = maxval - minval
+#    finalarray = []
+#    for val in data:
+#        finalarray.append((val - minval) / diff)
+#    return np.asarray(finalarray)
 
 
 def betternormalization(data):
@@ -29,22 +29,28 @@ def betternormalization(data):
 def preprocessing():
     samplingrate, data = read("Megalovania.wav")
     print("Read data")
-    data = normalization(data)
-    print("Data normalized")
+    #data = normalization(data)
+    #print("Data normalized")
     return data
 
-audiodata = preprocessing()
-audiodata = [x[0] for x in audiodata]
-audiodata=np.asarray(audiodata)
-
-
-model = Sequential()
-model.add(Embedding(len(audiodata),64))
-model.add(LSTM(32, return_sequences=False))
-model.add(Dense(1))
-model.compile(loss='sparse_categorical_crossentropy', optimizer=Adam(0.001), metrics=['categorical_accuracy'])
+audiodata = preprocessing() #read data
+audiodata = [x[0] for x in audiodata] #take L channel of audio
+audiodata=np.asarray(audiodata,dtype='float32') #float32 for fast GPU
 noised = soundops.create_noise(audiodata)
-#noised = noised.reshape((1, len(noised), 1))
-#audiodata=audiodata.reshape(1,len(audiodata),1)
+noised=soundops.data_to_chunks(noised) #200 timesteps per thingamabob
+
+noised=np.stack(noised) #concatenate stuffs
+noised=noised.astype("float32")
+
+def create_model():
+    model = Sequential()
+    model.add(LSTM(32, input_shape=(200,1), return_sequences=False))
+    model.add(Dense(200))
+    model.compile(loss='mse', optimizer=Adam(0.001), metrics=['acc'])
+    return model
+
+noised = noised.reshape((len(noised),200,1))
+#audiodata=audiodata.reshape((len(audiodata),200,1))
+model=create_model()
 model.fit(noised, audiodata, epochs=1)
-model.save("./models/first_model.h5")
+#model.save("./models/first_model.h5")

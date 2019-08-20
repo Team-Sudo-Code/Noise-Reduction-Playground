@@ -18,9 +18,9 @@ def frequency_extraction(audio, samplingrate):
 #        largest_idx=np.argmax(amplitudes)
 #        largestfreqs.append(frequencies[largest_idx])
 #        
-def data_to_chunks(audiodata, samplingrate):
-    newsamplerate=20*(samplingrate/1000) #20ms per sample
-    newarray=np.split(audiodata, newsamplerate)
+def data_to_chunks(audiodata):
+    audiodata=audiodata[:-(len(audiodata)%200)]
+    newarray=np.split(audiodata, len(audiodata)/200) ##Timesteps of size 200
     return newarray
 def process_all(filename):
     samplingrate, audiodata = read(filename)
