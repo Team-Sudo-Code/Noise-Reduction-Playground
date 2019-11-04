@@ -2,6 +2,7 @@ import numpy as np
 from keras.models import Sequential
 from keras.layers import Dense, Dropout,LSTM, BatchNormalization
 from keras.optimizers import Adam
+from sklearn.preprocessing import MinMaxScaler
 from scipy.io.wavfile import read
 import soundops
 
@@ -19,14 +20,6 @@ def create_model(TIMESTEPS):
     model.add(Dense(TIMESTEPS))
     model.compile(loss='mse', optimizer=Adam(0.001), metrics=['acc'])
     return model
-#def normalization(data):
-#    maxval = np.argmax(data)
-#    minval = np.argmin(data)
-#    diff = maxval - minval
-#    finalarray = []
-#    for val in data:
-#        finalarray.append((val - minval) / diff)
-#    return np.asarray(finalarray)
 
 
 #def betternormalization(data):
@@ -38,14 +31,18 @@ def create_model(TIMESTEPS):
 
 
 def preprocessing():
-    samplingrate, data = read("Megalovania.wav")
+    min_max=MinMaxScaler()
+    samplingrate, audiodata = read("Megalovania.wav")
     print("Read data")
+    audiodata=min_max.fit_transform(audiodata.reshape(-1,1))
+    print("Scaled data")
+    audiodata=audiodata.reshape(len(audiodata))
     #data = normalization(data)
     #print("Data normalized")
-    return data
+    return audiodata
 
 audiodata = preprocessing() #read data
-audiodata = [x[0] for x in audiodata] #take L channel of audio
+#audiodata = [x[0] for x in audiodata] #take L channel of audio
 audiodata=np.asarray(audiodata,dtype='float32') #float32 for fast GPU
 noised = soundops.create_noise(audiodata)
 noised=soundops.data_to_chunks(noised, TIMESTEPS) 
@@ -62,6 +59,6 @@ audiodata=np.asarray(audiodata,dtype='float32') #float32 for fast GPU
 
 noised = noised.reshape((len(noised),TIMESTEPS,1))
 model=create_model(TIMESTEPS)
-model.fit(noised, audiodata, epochs=EPOCHS, batch_size=BATCH_SIZE)
+model.fit(noised, audiodata, epochs=EPOCHS, batch_size=BATCH_SIZE, validation_split=0.2)
 if save_model:
     model.save("./models/first_model.h5")
